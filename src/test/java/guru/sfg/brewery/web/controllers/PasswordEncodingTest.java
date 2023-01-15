@@ -36,6 +36,13 @@ public class PasswordEncodingTest {
     }
 
     @Test
+    public void testBcrypt15() {
+        PasswordEncoder bcrypt15 = new BCryptPasswordEncoder(15);
+
+        System.out.println(bcrypt15.encode("tiger"));
+    }
+
+    @Test
     public void testNoOp() {
         PasswordEncoder noOp = NoOpPasswordEncoder.getInstance();
 
