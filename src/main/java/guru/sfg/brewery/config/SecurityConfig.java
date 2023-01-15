@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .roles("USER")
                 .and()
                 .withUser("scott")
-                .password("{bcrypt15}$2a$15$CuRT0xy4GHIxRJdlEudnqeXl/cjkRb8mLdiz6Sk1/WE9waLz0q3LC")
+                .password("{bcrypt10}$2a$10$duCiEVFnY3sodCiHB2Iz2OGbLOu2kMgpEHghdgWHFwZp9t1oZme.C")
                 .roles("CUSTOMER");
     }
 }

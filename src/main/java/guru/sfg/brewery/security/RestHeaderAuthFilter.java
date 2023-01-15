@@ -1,6 +1,8 @@
 package guru.sfg.brewery.security;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
@@ -43,7 +45,7 @@ public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 
-        if(!StringUtils.isEmpty(username)) {
+        if (!StringUtils.isEmpty(username)) {
             return this.getAuthenticationManager().authenticate(token);
         }
         return null;
@@ -58,12 +60,28 @@ public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter
             this.logger.debug("Request is to process authentication");
         }
 
-        Authentication authResult = this.attemptAuthentication(request, response);
+        try {
+            Authentication authResult = this.attemptAuthentication(request, response);
 
-        if(authResult != null) {
-            this.successfulAuthentication(request, response, chain, authResult);
+            if (authResult != null) {
+                this.successfulAuthentication(request, response, chain, authResult);
+            }
+            chain.doFilter(request, response);
+        } catch (AuthenticationException e) {
+            log.error("Authentication Failure");
+            unsuccessfulAuthentication(request, response, e);
         }
-        chain.doFilter(request, response);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        SecurityContextHolder.clearContext();
+        if (log.isDebugEnabled()) {
+            log.debug("Authentication request failed: " + failed.toString(), failed);
+            log.debug("Updated SecurityContextHolder to contain null Authentication");
+        }
+
+        response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
     }
 
     @Override
