@@ -20,16 +20,32 @@ public class BeerRestControllerIT extends BaseIT {
     }
 
     @Test
+    public void deleteBeerWithUrlParamFilter() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/dc0891cc-0633-483c-82b1-8025a8f519e9")
+                        .param("Api-Key", "user")
+                        .param("Api-Secret", "123"))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void deleteBeerWithUrlParamFilterBadCred() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/dc0891cc-0633-483c-82b1-8025a8f519e9")
+                        .param("Api-Key", "user")
+                        .param("Api-Secret", "321"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void deleteBeerBadCred() throws Exception {
         mockMvc.perform(delete("/api/v1/beer/dc0891cc-0633-483c-82b1-8025a8f519e9")
-                .header("Api-Key", "user").header("Api-Secret", "321"))
+                        .header("Api-Key", "user").header("Api-Secret", "321"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void deleteBeerHttpBasic() throws Exception {
         mockMvc.perform(delete("/api/v1/beer/dc0891cc-0633-483c-82b1-8025a8f519e9")
-                .with(httpBasic("user", "123")))
+                        .with(httpBasic("user", "123")))
                 .andExpect(status().is2xxSuccessful());
     }
 
