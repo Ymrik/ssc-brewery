@@ -1,8 +1,10 @@
 package guru.sfg.brewery.config;
 
+import guru.sfg.brewery.security.JpaUserDetailsService;
 import guru.sfg.brewery.security.RestHeaderAuthFilter;
 import guru.sfg.brewery.security.SfgPasswordEncoderFactories;
 import guru.sfg.brewery.security.UrlParamAuthFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -83,20 +85,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        return new InMemoryUserDetailsManager(admin, user);
 //    }
 
+   // @Override
+    //protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(jpaUserDetailsService).passwordEncoder(passwordEncoder());
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("user")
-                .password("{bcrypt}$2a$10$jgX9q1QbTCzpN83.iK0ML.pOMIO1PKtTGL8RLxe4d5JE6BWE5R6PO")
-                .roles("ADMIN")
-                .and()
-                .withUser("user2")
-                .password("{sha256}86206824942f5de80cac66dc9fa41df8028f943a2b1c3b387028c798b6e11b902747a3d362e92485")
-                .roles("USER")
-                .and()
-                .withUser("scott")
-                .password("{bcrypt10}$2a$10$duCiEVFnY3sodCiHB2Iz2OGbLOu2kMgpEHghdgWHFwZp9t1oZme.C")
-                .roles("CUSTOMER");
-    }
+//        auth.inMemoryAuthentication()
+//                .withUser("user")
+//                .password("{bcrypt}$2a$10$jgX9q1QbTCzpN83.iK0ML.pOMIO1PKtTGL8RLxe4d5JE6BWE5R6PO")
+//                .roles("ADMIN")
+//                .and()
+//                .withUser("user2")
+//                .password("{sha256}86206824942f5de80cac66dc9fa41df8028f943a2b1c3b387028c798b6e11b902747a3d362e92485")
+//                .roles("USER")
+//                .and()
+//                .withUser("scott")
+//                .password("{bcrypt10}$2a$10$duCiEVFnY3sodCiHB2Iz2OGbLOu2kMgpEHghdgWHFwZp9t1oZme.C")
+//                .roles("CUSTOMER");
+//
+   // }
 }
