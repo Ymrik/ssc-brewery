@@ -2,7 +2,6 @@ package guru.sfg.brewery.web.controllers.api;
 
 import guru.sfg.brewery.web.controllers.BaseIT;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -17,7 +16,7 @@ public class BeerRestControllerIT extends BaseIT {
     public void deleteBeer() throws Exception {
         mockMvc.perform(delete("/api/v1/beer/dc0891cc-0633-483c-82b1-8025a8f519e9")
                         .header("Api-Key", "user").header("Api-Secret", "123"))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -25,7 +24,7 @@ public class BeerRestControllerIT extends BaseIT {
         mockMvc.perform(delete("/api/v1/beer/dc0891cc-0633-483c-82b1-8025a8f519e9")
                         .param("Api-Key", "user")
                         .param("Api-Secret", "123"))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -44,9 +43,23 @@ public class BeerRestControllerIT extends BaseIT {
     }
 
     @Test
-    public void deleteBeerHttpBasic() throws Exception {
+    public void deleteBeerHttpBasicWithUserRole() throws Exception {
         mockMvc.perform(delete("/api/v1/beer/dc0891cc-0633-483c-82b1-8025a8f519e9")
                         .with(httpBasic("user", "123")))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void deleteBeerHttpBasicWithCustomerRole() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/dc0891cc-0633-483c-82b1-8025a8f519e9")
+                        .with(httpBasic("scott", "tiger")))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void deleteBeerHttpBasic() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/dc0891cc-0633-483c-82b1-8025a8f519e9")
+                        .with(httpBasic("spring", "guru")))
                 .andExpect(status().is2xxSuccessful());
     }
 
